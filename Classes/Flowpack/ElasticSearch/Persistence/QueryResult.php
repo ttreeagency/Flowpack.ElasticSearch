@@ -11,6 +11,7 @@ namespace Flowpack\ElasticSearch\Persistence;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use Flowpack\ElasticSearch\Transfer\Response;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\QueryResultInterface;
 
@@ -48,6 +49,14 @@ class QueryResult implements QueryResultInterface {
 		if (!is_array($this->rows)) {
 			$this->rows = $this->query->getResult();
 		}
+	}
+
+	/**
+	 * @return Response
+	 */
+	public function getResponse() {
+		$this->initialize();
+		return $this->query->getResponse();
 	}
 
 	/**
