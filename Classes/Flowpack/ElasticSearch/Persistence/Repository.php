@@ -70,6 +70,13 @@ abstract class Repository implements RepositoryInterface {
 	 * @var AbstractType
 	 */
 	protected $documentType;
+
+	/**
+	 * @var integer
+	 */
+	protected $defaultLimit = 10;
+
+	/**
 	 * @var array
 	 */
 	protected $defaultOrderings = array();
@@ -120,6 +127,20 @@ abstract class Repository implements RepositoryInterface {
 		} else {
 			$this->entityClassName = static::ENTITY_CLASSNAME;
 		}
+	}
+
+	/**
+	 * @param int $defaultLimit
+	 */
+	public function setDefaultLimit($defaultLimit) {
+		$this->defaultLimit = (integer)$defaultLimit;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getDefaultLimit() {
+		return $this->defaultLimit;
 	}
 
 	/**
@@ -207,7 +228,15 @@ abstract class Repository implements RepositoryInterface {
 	 * @api
 	 */
 	public function createQuery() {
-		return $this->index->createQuery($this->documentTypeName, $this->entityClassName);
+		$query = $this->index->createQuery($this->documentTypeName, $this->entityClassName);
+		if ($this->defaultOrderings) {
+			$query->setOrderings($this->defaultOrderings);
+		}
+		if ($this->defaultLimit) {
+			$query->setLimit($this->defaultLimit);
+		}
+
+		return $query;
 	}
 
 	/**
