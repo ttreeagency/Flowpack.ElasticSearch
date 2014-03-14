@@ -211,6 +211,17 @@ abstract class Repository implements RepositoryInterface {
 	}
 
 	/**
+	 * @param array $customQuery
+	 * @return \Flowpack\ElasticSearch\Transfer\Response
+	 */
+	public function findAllByCustomQuery(array $customQuery) {
+		$query = $this->createQuery();
+		$query->setCustomQuery($customQuery);
+		
+		return $query->execute();
+	}
+
+	/**
 	 * Finds an object matching the given identifier.
 	 *
 	 * @param mixed $identifier The identifier of the object to find
