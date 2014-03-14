@@ -13,6 +13,7 @@ namespace Flowpack\ElasticSearch\Persistence;
 
 use Flowpack\ElasticSearch\Annotations\Indexable;
 use Flowpack\ElasticSearch\Domain\Factory\ClientFactory;
+use Flowpack\ElasticSearch\Domain\Model\AbstractType;
 use Flowpack\ElasticSearch\Domain\Model\Client;
 use Flowpack\ElasticSearch\Domain\Model\GenericType;
 use Flowpack\ElasticSearch\Domain\Model\Index;
@@ -66,6 +67,9 @@ abstract class Repository implements RepositoryInterface {
 	protected $documentTypeName;
 
 	/**
+	 * @var AbstractType
+	 */
+	protected $documentType;
 	 * @var array
 	 */
 	protected $defaultOrderings = array();
@@ -104,6 +108,7 @@ abstract class Repository implements RepositoryInterface {
 		$this->client = $this->clientFactory->create();
 		$this->index = $this->client->findIndex($indexableAnnotation->indexName ?: $this->getIndexName());
 		$this->documentTypeName = $indexableAnnotation->typeName;
+		$this->documentType = new GenericType($this->index, $this->documentTypeName);
 	}
 
 	/**
