@@ -223,7 +223,7 @@ class Index {
 	 *
 	 * @param string $documentTypeName ElasticSearch document type name
 	 * @param string $entityClassName Entity class name
-	 * @return \Flowpack\ElasticSearch\Persistence\ElasticSearchQuery
+	 * @return \Flowpack\ElasticSearch\Persistence\Query
 	 */
 	public function createQuery($documentTypeName, $entityClassName) {
 		$query = $this->queryFactory->create($this, $documentTypeName, $entityClassName);

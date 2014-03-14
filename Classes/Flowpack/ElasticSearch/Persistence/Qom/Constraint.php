@@ -21,6 +21,8 @@ use TYPO3\Flow\Persistence\Generic\Qom as FlowQom;
 class Constraint extends FlowQom\Constraint {
 
 	/**
+	 * The name of the constraint for ElasticSearch
+	 *
 	 * @var string
 	 */
 	protected $name;
