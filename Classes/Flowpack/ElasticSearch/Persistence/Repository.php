@@ -62,11 +62,6 @@ abstract class Repository implements RepositoryInterface {
 	protected $indexName;
 
 	/**
-	 * @var string
-	 */
-	protected $documentTypeName;
-
-	/**
 	 * @var AbstractType
 	 */
 	protected $documentType;
@@ -114,8 +109,7 @@ abstract class Repository implements RepositoryInterface {
 		}
 		$this->client = $this->clientFactory->create();
 		$this->index = $this->client->findIndex($indexableAnnotation->indexName ?: $this->getIndexName());
-		$this->documentTypeName = $indexableAnnotation->typeName;
-		$this->documentType = new GenericType($this->index, $this->documentTypeName);
+		$this->documentType = $this->index->findType($indexableAnnotation->typeName);
 	}
 
 	/**
@@ -166,12 +160,10 @@ abstract class Repository implements RepositoryInterface {
 	}
 
 	/**
-	 * Returns the document type name
-	 *
-	 * @return string
+	 * @return AbstractType
 	 */
-	public function getDocumentTypeName() {
-		return $this->documentTypeName;
+	public function getDocumentType() {
+		return $this->documentType;
 	}
 
 	/**
@@ -217,7 +209,7 @@ abstract class Repository implements RepositoryInterface {
 	public function findAllByCustomQuery(array $customQuery) {
 		$query = $this->createQuery();
 		$query->setCustomQuery($customQuery);
-		
+
 		return $query->execute();
 	}
 
@@ -239,7 +231,7 @@ abstract class Repository implements RepositoryInterface {
 	 * @api
 	 */
 	public function createQuery() {
-		$query = $this->index->createQuery($this->documentTypeName, $this->entityClassName);
+		$query = $this->index->createQuery($this->documentType->getName(), $this->entityClassName);
 		if ($this->defaultOrderings) {
 			$query->setOrderings($this->defaultOrderings);
 		}
@@ -257,7 +249,7 @@ abstract class Repository implements RepositoryInterface {
 	 * @api
 	 */
 	public function countAll() {
-		return $this->index->findType($this->documentTypeName)->count();
+		return $this->index->findType($this->documentType->getName())->count();
 	}
 
 	/**
