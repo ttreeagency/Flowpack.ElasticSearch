@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Flowpack\ElasticSearch\Domain\Model\AbstractType;
 use Flowpack\ElasticSearch\Domain\Model\Index;
 use Flowpack\ElasticSearch\Service\QueryBuilder;
+use Flowpack\ElasticSearch\Transfer\Response;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\Generic\Qom\Comparison;
 use TYPO3\Flow\Persistence\Generic\Qom\Constraint;
@@ -56,6 +57,11 @@ class Query extends \TYPO3\Flow\Persistence\Generic\Query {
 	 * @var Constraint
 	 */
 	protected $filter;
+
+	/**
+	 * @var Response
+	 */
+	protected $response;
 
 	/**
 	 * @Flow\Inject
@@ -123,7 +129,14 @@ class Query extends \TYPO3\Flow\Persistence\Generic\Query {
 	}
 
 	/**
-	 * @return QueryResultInterface
+	 * @return Response
+	 */
+	public function getResponse() {
+		return $this->response;
+	}
+
+	/**
+	 * @return QueryResult
 	 */
 	public function execute() {
 		return new QueryResult($this);
@@ -133,7 +146,8 @@ class Query extends \TYPO3\Flow\Persistence\Generic\Query {
 	 * @return array
 	 */
 	public function getRawResult() {
-		return $this->findDocumentType()->search($this->queryBuilder->buildParameters($this))->getTreatedContent();
+		$this->response = $this->findDocumentType()->search($this->queryBuilder->buildParameters($this));
+		return $this->response->getTreatedContent();
 	}
 
 	/**
