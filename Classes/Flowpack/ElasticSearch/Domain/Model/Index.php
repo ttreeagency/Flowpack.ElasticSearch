@@ -73,6 +73,12 @@ class Index {
 	protected $client;
 
 	/**
+	 * @Flow\Inject
+	 * @var \Flowpack\ElasticSearch\Persistence\QueryFactory
+	 */
+	protected $queryFactory;
+
+	/**
 	 * @var array
 	 */
 	protected $settings;
@@ -210,6 +216,18 @@ class Index {
 			$settings = Arrays::getValueByPath($this->settings, 'indexes.default' . '.' . $this->name);
 		}
 		return $settings;
+	}
+
+	/**
+	 * Create a query using this index
+	 *
+	 * @param string $documentTypeName ElasticSearch document type name
+	 * @param string $entityClassName Entity class name
+	 * @return \Flowpack\ElasticSearch\Persistence\ElasticSearchQuery
+	 */
+	public function createQuery($documentTypeName, $entityClassName) {
+		$query = $this->queryFactory->create($this, $documentTypeName, $entityClassName);
+		return $query;
 	}
 }
 
