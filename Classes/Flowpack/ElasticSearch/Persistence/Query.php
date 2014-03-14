@@ -20,7 +20,6 @@ use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\Generic\Qom\Comparison;
 use TYPO3\Flow\Persistence\Generic\Qom\Constraint;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
-use TYPO3\Flow\Persistence\QueryResultInterface;
 use TYPO3\Flow\Reflection\ReflectionService;
 
 /**
@@ -68,6 +67,11 @@ class Query extends \TYPO3\Flow\Persistence\Generic\Query {
 	 * @var QueryBuilder
 	 */
 	protected $queryBuilder;
+
+	/**
+	 * @var array
+	 */
+	protected $customQuery = NULL;
 
 	/**
 	 * @param Index $index
@@ -143,10 +147,28 @@ class Query extends \TYPO3\Flow\Persistence\Generic\Query {
 	}
 
 	/**
+	 * @param array $customQuery
+	 */
+	public function setCustomQuery(array $customQuery) {
+		$this->customQuery = $customQuery;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCustomQuery() {
+		return $this->customQuery;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getRawResult() {
-		$this->response = $this->findDocumentType()->search($this->queryBuilder->buildParameters($this));
+		if (is_array($this->customQuery)) {
+			$this->response = $this->findDocumentType()->search($this->customQuery);
+		} else {
+			$this->response = $this->findDocumentType()->search($this->queryBuilder->buildParameters($this));
+		}
 		return $this->response->getTreatedContent();
 	}
 
