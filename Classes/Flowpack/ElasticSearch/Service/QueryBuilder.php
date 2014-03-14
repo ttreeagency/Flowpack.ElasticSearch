@@ -76,9 +76,6 @@ class QueryBuilder  {
 			);
 		}
 
-		\TYPO3\Flow\var_dump(json_encode($elasticSearchQuery));
-		
-
 		return $elasticSearchQuery;
 	}
 
