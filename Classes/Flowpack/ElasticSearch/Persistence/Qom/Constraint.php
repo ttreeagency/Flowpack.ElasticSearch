@@ -28,6 +28,11 @@ class Constraint extends FlowQom\Constraint {
 	protected $name;
 
 	/**
+	 * @var integer
+	 */
+	protected $boost;
+
+	/**
 	 * @param string $name
 	 * @return Constraint
 	 */
@@ -43,4 +48,23 @@ class Constraint extends FlowQom\Constraint {
 	public function getName() {
 		return $this->name;
 	}
+
+	/**
+	 * @param integer $boost
+	 *
+	 * @return Constraint
+	 */
+	public function setBoost($boost) {
+		$this->boost = (integer)$boost;
+
+		return $this;
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getBoost() {
+		return $this->boost;
+	}
+
 }
