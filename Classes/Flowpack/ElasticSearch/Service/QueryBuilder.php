@@ -56,6 +56,7 @@ class QueryBuilder  {
 		if ($query->getLimit() > 0) {
 			$elasticSearchQuery['size'] = $query->getLimit();
 		}
+
 		if ($query->getOffset() > 0) {
 			$elasticSearchQuery['from'] = $query->getOffset();
 		}
@@ -145,6 +146,7 @@ class QueryBuilder  {
 			'match' => array(
 				$propertyName => array(
 					'_name' => (string)$constraint->getName(),
+					'boost' => $constraint->getBoost(),
 					'query' => (string)$constraint->getConstraint()->getOperand2(),
 					'operator' => $constraint->getOperator(),
 					'analyser' => $constraint->getAnalyzer(),
@@ -222,6 +224,7 @@ class QueryBuilder  {
 		return array(
 			'multi_match' => array(
 				'_name' => (string)$constraint->getName(),
+				'boost' => $constraint->getBoost(),
 				'query' => (string)$constraint->getQuery(),
 				'fields' => $constraint->getFields(),
 				'use_dis_max' => $constraint->getUseDisMax(),
@@ -264,6 +267,7 @@ class QueryBuilder  {
 		return array(
 			'boosting' => array(
 				'_name' => (string)$constraint->getName(),
+				'boost' => $constraint->getBoost(),
 				'positive' => $this->buildStatementForConstraint($constraint->getPositiveConstraint()),
 				'negative' => $this->buildStatementForConstraint($constraint->getNegativeConstraint()),
 				'negative_boost' => $constraint->getNegativeBoost()
@@ -279,6 +283,7 @@ class QueryBuilder  {
 		$statement = array(
 			'bool' => array(
 				'_name' => (string)$constraint->getName(),
+				'boost' => $constraint->getBoost(),
 				'must' => $this->buildStatementForConstraintArray($constraint->getMustConstraint()),
 				'should' => $this->buildStatementForConstraintArray($constraint->getShouldConstraint()),
 				'must_not' => $this->buildStatementForConstraintArray($constraint->getMustNotConstraint()),
